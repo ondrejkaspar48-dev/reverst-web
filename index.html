@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0912">
+    <meta name="description" content="ReversT – chytrá korektura textů. Opravuj gramatiku, pravopis a smysl textu.">
+    <title>ReversT – Piš správně. Bez námahy.</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #0b0912;
+            --surface: #14111f;
+            --surface-light: #1c182b;
+            --purple: #9870ff;
+            --purple-light: #b49aff;
+            --text: #f5f1ff;
+            --muted: #a49bb8;
+            --border: rgba(255,255,255,.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .background-glow {
+            position: absolute;
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 850px;
+            height: 650px;
+            background: radial-gradient(ellipse, rgba(125, 76, 255, .19), transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            width: min(1120px, calc(100% - 48px));
+            margin: auto;
+        }
+
+        /* NAVIGACE */
+
+        header {
+            height: 82px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(11, 9, 18, .75);
+            backdrop-filter: blur(18px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -.8px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(145deg, #a47cff, #7045d9);
+            color: white;
+            font-size: 22px;
+            box-shadow: 0 5px 25px rgba(135, 91, 255, .3);
+        }
+
+        .logo span:last-child {
+            color: var(--purple-light);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 34px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .nav-button {
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 11px 19px;
+            border-radius: 10px;
+            transition: .2s;
+        }
+
+        .nav-button:hover {
+            background: #29213d;
+            border-color: rgba(152,112,255,.5);
+        }
+
+        /* HERO */
+
+        .hero {
+            min-height: 690px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 90px 0 75px;
+            position: relative;
+        }
+
+        .announcement {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 14px;
+            border: 1px solid rgba(152,112,255,.25);
+            border-radius: 30px;
+            background: rgba(152,112,255,.08);
+            color: var(--purple-light);
+            font-size: 12px;
+            margin-bottom: 30px;
+        }
+
+        .announcement-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #a98aff;
+            box-shadow: 0 0 12px #a98aff;
+        }
+
+        h1 {
+            font-size: clamp(43px, 7vw, 76px);
+            line-height: 1.08;
+            letter-spacing: -4px;
+            font-weight: 800;
+            max-width: 850px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(100deg, #bca5ff, #895cff, #d3c3ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-description {
+            max-width: 570px;
+            margin-top: 25px;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 36px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .button-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #a17bff, #7950e8);
+            color: white;
+            padding: 15px 23px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 8px 35px rgba(128, 83, 255, .25);
+            transition: .25s;
+        }
+
+        .button-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(128, 83, 255, .4);
+        }
+
+        .button-secondary {
+            padding: 15px 23px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            color: #d8d0e8;
+            font-size: 14px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .button-secondary:hover {
+            background: var(--surface);
+        }
+
+        .hero-note {
+            margin-top: 20px;
+            color: #716980;
+            font-size: 12px;
+        }
+
+        /* UKÁZKA */
+
+        .preview-wrapper {
+            width: min(850px, 100%);
+            margin-top: 75px;
+            position: relative;
+        }
+
+        .preview-glow {
+            position: absolute;
+            inset: 20% 10%;
+            background: #8654ff;
+            filter: blur(100px);
+            opacity: .17;
+            z-index: -1;
+        }
+
+        .preview {
+            background: rgba(20,17,31,.95);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 18px;
+            overflow: hidden;
+            text-align: left;
+            box-shadow: 0 30px 100px rgba(0,0,0,.4);
+        }
+
+        .preview-top {
+            height: 53px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 19px;
+        }
+
+        .preview-title {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .window-dots i {
+            width: 8px;
+            height: 8px;
+            background: #51475f;
+            border-radius: 50%;
+        }
+
+        .preview-content {
+            padding: 27px;
+        }
+
+        .preview-label {
+            color: #8e829f;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            font-weight: 700;
+            margin-bottom: 13px;
+        }
+
+        .preview-text {
+            background: #1b1728;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            padding: 18px;
+            color: #d9d2e7;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .wrong {
+            color: #ff9baf;
+            text-decoration: underline wavy rgba(255,130,160,.7);
+            text-decoration-thickness: 1px;
+        }
+
+        .correct {
+            color: #a8e6bd;
+        }
+
+        .preview-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 19px;
+            flex-wrap: wrap;
+        }
+
+        .status {
+            color: #a8e6bd;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #76d99a;
+        }
+
+        .preview-tag {
+            background: rgba(152,112,255,.12);
+            color: var(--purple-light);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+        }
+
+        /* SEKCE */
+
+        section {
+            padding: 100px 0;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+
+        .eyebrow {
+            color: var(--purple-light);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        h2 {
+            font-size: clamp(30px, 4vw, 43px);
+            letter-spacing: -1.8px;
+            font-weight: 800;
+        }
+
+        .section-description {
+            color: var(--muted);
+            margin-top: 15px;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, #171321, #110e19);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 29px;
+            transition: .25s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(152,112,255,.4);
+            background: #191526;
+        }
+
+        .feature-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            background: rgba(152,112,255,.13);
+            border: 1px solid rgba(152,112,255,.17);
+            border-radius: 13px;
+            color: var(--purple-light);
+            font-size: 21px;
+            margin-bottom: 22px;
+        }
+
+        .feature-card h3 {
+            font-size: 17px;
+            margin-bottom: 11px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* CTA */
+
+        .download-section {
+            padding-top: 40px;
+        }
+
+        .download-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(125deg, #21183b, #171126 65%);
+            border: 1px solid rgba(165,130,255,.22);
+            border-radius: 22px;
+            padding: 65px 30px;
+            text-align: center;
+        }
+
+        .download-card::before {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 300px;
+            background: #8756ff;
+            filter: blur(120px);
+            opacity: .16;
+            top: -180px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .download-card h2 {
+            position: relative;
+        }
+
+        .download-card p {
+            position: relative;
+            color: var(--muted);
+            margin-top: 17px;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .download-status {
+            display: inline-block;
+            position: relative;
+            margin-top: 27px;
+            padding: 12px 17px;
+            border: 1px solid rgba(255,255,255,.12);
+            background: rgba(255,255,255,.04);
+            color: #cfc5e4;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 30px 0;
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-copy {
+            color: #766e85;
+            font-size: 12px;
+        }
+
+        .footer-brand {
+            font-size: 14px;
+            font-weight: 800;
+            color: #c3b2ff;
+        }
+
+        /* ANIMACE */
+
+        .fade-in {
+            animation: fadeIn .9s ease both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 750px) {
+            .nav-links {
+                gap: 13px;
+                font-size: 12px;
+            }
+
+            .nav-links a:nth-child(2) {
+                display: none;
+            }
+
+            .nav-button {
+                padding: 9px 12px;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 90px 0 40px;
+            }
+
+            h1 {
+                letter-spacing: -2px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+            .preview-wrapper {
+                margin-top: 55px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 75px 0;
+            }
+
+            .preview-content {
+                padding: 17px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .container {
+                width: calc(100% - 30px);
+            }
+
+            .nav-links a:first-child {
+                display: none;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .hero-actions {
+                width: 100%;
+            }
+
+            .hero-actions a {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .download-card {
+                padding: 50px 20px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background-glow"></div>
+
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">
+                <span class="logo-icon">R</span>
+                <span>Revers<span>T</span></span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#">Domů</a>
+                <a href="#funkce">Funkce</a>
+                <a href="#stahnout" class="nav-button">Stáhnout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="container">
+            <section class="hero">
+                <div class="announcement fade-in">
+                    <span class="announcement-dot"></span>
+                    Chytřejší způsob psaní
+                </div>
+
+                <h1 class="fade-in">
+                    Piš správně.<br>
+                    <span class="gradient-text">Bez námahy.</span>
+                </h1>
+
+                <p class="hero-description fade-in">
+                    Představujeme ReversT. Chytrou korekturu, která ti pomůže
+                    s gramatikou, pravopisem i smyslem textu.
+                    Protože na tom, co píšeš, záleží.
+                </p>
+
+                <div class="hero-actions fade-in">
+                    <a href="#stahnout" class="button-primary">
+                        Stáhnout ReversT <span>→</span>
+                    </a>
+
+                    <a href="#funkce" class="button-secondary">
+                        Objevit funkce
+                    </a>
+                </div>
+
+                <p class="hero-note">
+                    Vytvořeno pro Windows
+                </p>
+
+                <div class="preview-wrapper fade-in">
+                    <div class="preview-glow"></div>
+
+                    <div class="preview">
+                        <div class="preview-top">
+                            <div class="preview-title">ReversT · Korektura</div>
+                            <div class="window-dots">
+                                <i></i><i></i><i></i>
+                            </div>
+                        </div>
+
+                        <div class="preview-content">
+                            <div class="preview-label">Ukázka korektury</div>
+
+                            <div class="preview-text">
+                                <span class="wrong">Včera jsem šel do školy a zapomněl jsem si sešít.</span>
+                                <br><br>
+                                <span class="correct">Včera jsem šel do školy a zapomněl jsem si sešit.</span>
+                            </div>
+
+                            <div class="preview-bottom">
+                                <div class="status">Návrh opravy</div>
+                                <div class="preview-tag">Chytrá korektura</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section id="funkce">
+            <div class="container">
+                <div class="section-heading">
+                    <div class="eyebrow">Co ReversT umí</div>
+                    <h2>Více než obyčejná kontrola.</h2>
+                    <p class="section-description">
+                        ReversT se zaměřuje na to, aby tvůj text nejen vypadal správně,<br>
+                        ale také dával smysl.
+                    </p>
+                </div>
+
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">✦</div>
+                        <h3>Gramatika a pravopis</h3>
+                        <p>
+                            Pomáhá odhalovat pravopisné a gramatické chyby
+                            a navrhuje jejich opravu.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">⌁</div>
+                        <h3>Smysl textu</h3>
+                        <p>
+                            Nezaměřuje se pouze na jednotlivá slova.
+                            Pomáhá také srozumitelnosti a významu vět.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">◇</div>
+                        <h3>Osobní slovník</h3>
+                        <p>
+                            Vlastní slovník a schválené opravy pomáhají
+                            přizpůsobovat korekturu tvým potřebám.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="download-section" id="stahnout">
+            <div class="container">
+                <div class="download-card">
+                    <div class="eyebrow">ReversT pro Windows</div>
+                    <h2>Připrav se psát lépe.</h2>
+
+                    <p>
+                        ReversT se připravuje na zveřejnění.<br>
+                        Instalační soubor zde bude dostupný, jakmile bude připraven.
+                    </p>
+
+                    <div class="download-status">
+                        Instalační soubor připravujeme
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">ReversT</div>
+            <div class="footer-copy">
+                © <span id="year"></span> ReversT. Všechna práva vyhrazena.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+    </script>
+
+</body>
+</html>
