@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0b0912">
-    <meta name="description" content="ReversT – chytrá korektura textů. Opravuj gramatiku, pravopis a smysl textu.">
+    <meta name="description" content="ReversT – chytrá korektura textů. Gramatika, pravopis a smysl textu na jednom místě.">
+
     <title>ReversT – Piš správně. Bez námahy.</title>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+    <link rel="icon" href="/ikona5.ico" type="image/x-icon">
 
+    <style>
         :root {
             --bg: #0b0912;
-            --surface: #14111f;
-            --surface-light: #1c182b;
+            --surface: #151220;
+            --surface2: #1d192a;
             --purple: #9870ff;
-            --purple-light: #b49aff;
+            --purple-light: #bba4ff;
             --text: #f5f1ff;
             --muted: #a49bb8;
-            --border: rgba(255,255,255,.08);
+            --border: rgba(255,255,255,.09);
         }
 
         * {
@@ -32,9 +33,9 @@
         }
 
         body {
-            font-family: 'DM Sans', sans-serif;
             background: var(--bg);
             color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
             overflow-x: hidden;
         }
 
@@ -43,122 +44,113 @@
             text-decoration: none;
         }
 
-        .background-glow {
-            position: absolute;
-            top: -300px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 850px;
-            height: 650px;
-            background: radial-gradient(ellipse, rgba(125, 76, 255, .19), transparent 70%);
-            pointer-events: none;
-            z-index: -1;
+        .container {
+            width: min(1120px, calc(100% - 40px));
+            margin: auto;
         }
 
-        .container {
-            width: min(1120px, calc(100% - 48px));
-            margin: auto;
+        .glow {
+            position: absolute;
+            top: -350px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 900px;
+            height: 700px;
+            background: radial-gradient(ellipse, rgba(130,80,255,.19), transparent 70%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         /* NAVIGACE */
 
         header {
-            height: 82px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            background: rgba(11, 9, 18, .75);
-            backdrop-filter: blur(18px);
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 20;
+            height: 78px;
+            background: rgba(11,9,18,.85);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
         }
 
         nav {
+            height: 100%;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 11px;
+            gap: 12px;
             font-size: 23px;
             font-weight: 800;
             letter-spacing: -.8px;
         }
 
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
-            display: grid;
-            place-items: center;
-            background: linear-gradient(145deg, #a47cff, #7045d9);
-            color: white;
-            font-size: 22px;
-            box-shadow: 0 5px 25px rgba(135, 91, 255, .3);
+        .logo img {
+            width: 43px;
+            height: 43px;
+            object-fit: contain;
+            border-radius: 11px;
         }
 
-        .logo span:last-child {
+        .logo-name span {
             color: var(--purple-light);
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 34px;
+            gap: 32px;
             color: var(--muted);
             font-size: 14px;
-            font-weight: 500;
         }
 
         .nav-links a:hover {
             color: white;
         }
 
-        .nav-button {
-            background: var(--surface-light);
+        .nav-download {
+            background: var(--surface2);
             border: 1px solid var(--border);
-            color: white;
-            padding: 11px 19px;
+            padding: 11px 18px;
             border-radius: 10px;
+            color: white;
             transition: .2s;
         }
 
-        .nav-button:hover {
+        .nav-download:hover {
+            border-color: var(--purple);
             background: #29213d;
-            border-color: rgba(152,112,255,.5);
         }
 
-        /* HERO */
+        /* HLAVNÍ SEKCE */
 
         .hero {
             min-height: 690px;
+            padding: 100px 0 80px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             text-align: center;
-            padding: 90px 0 75px;
-            position: relative;
         }
 
-        .announcement {
+        .tag {
             display: inline-flex;
             align-items: center;
             gap: 9px;
-            padding: 8px 14px;
-            border: 1px solid rgba(152,112,255,.25);
+            padding: 9px 15px;
             border-radius: 30px;
+            border: 1px solid rgba(152,112,255,.3);
             background: rgba(152,112,255,.08);
             color: var(--purple-light);
             font-size: 12px;
             margin-bottom: 30px;
         }
 
-        .announcement-dot {
+        .tag-dot {
             width: 7px;
             height: 7px;
             border-radius: 50%;
@@ -167,31 +159,29 @@
         }
 
         h1 {
-            font-size: clamp(43px, 7vw, 76px);
+            font-size: clamp(45px, 7vw, 78px);
             line-height: 1.08;
             letter-spacing: -4px;
             font-weight: 800;
-            max-width: 850px;
         }
 
-        .gradient-text {
-            background: linear-gradient(100deg, #bca5ff, #895cff, #d3c3ff);
+        .gradient {
+            background: linear-gradient(100deg, #c1adff, #875cff, #d7caff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
         .hero-description {
-            max-width: 570px;
-            margin-top: 25px;
+            max-width: 580px;
+            margin-top: 26px;
             color: var(--muted);
             font-size: 17px;
             line-height: 1.8;
         }
 
-        .hero-actions {
+        .actions {
             display: flex;
-            align-items: center;
             gap: 14px;
             margin-top: 36px;
             flex-wrap: wrap;
@@ -202,26 +192,26 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: linear-gradient(135deg, #a17bff, #7950e8);
-            color: white;
             padding: 15px 23px;
             border-radius: 12px;
+            background: linear-gradient(135deg, #a17bff, #7950e8);
+            color: white;
             font-weight: 700;
             font-size: 14px;
-            box-shadow: 0 8px 35px rgba(128, 83, 255, .25);
+            box-shadow: 0 8px 35px rgba(128,83,255,.25);
             transition: .25s;
         }
 
         .button-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(128, 83, 255, .4);
+            box-shadow: 0 12px 40px rgba(128,83,255,.4);
         }
 
         .button-secondary {
             padding: 15px 23px;
-            border-radius: 12px;
             border: 1px solid var(--border);
-            color: #d8d0e8;
+            border-radius: 12px;
+            color: #ded6ee;
             font-size: 14px;
             font-weight: 600;
             transition: .2s;
@@ -237,7 +227,7 @@
             font-size: 12px;
         }
 
-        /* UKÁZKA */
+        /* UKÁZKA APLIKACE */
 
         .preview-wrapper {
             width: min(850px, 100%);
@@ -250,12 +240,12 @@
             inset: 20% 10%;
             background: #8654ff;
             filter: blur(100px);
-            opacity: .17;
+            opacity: .18;
             z-index: -1;
         }
 
         .preview {
-            background: rgba(20,17,31,.95);
+            background: rgba(20,17,31,.96);
             border: 1px solid rgba(255,255,255,.12);
             border-radius: 18px;
             overflow: hidden;
@@ -264,17 +254,26 @@
         }
 
         .preview-top {
-            height: 53px;
+            height: 55px;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 19px;
+            padding: 0 20px;
         }
 
         .preview-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 13px;
             font-weight: 700;
+        }
+
+        .preview-title img {
+            width: 25px;
+            height: 25px;
+            border-radius: 6px;
         }
 
         .window-dots {
@@ -315,7 +314,6 @@
         .wrong {
             color: #ff9baf;
             text-decoration: underline wavy rgba(255,130,160,.7);
-            text-decoration-thickness: 1px;
         }
 
         .correct {
@@ -334,17 +332,6 @@
         .status {
             color: #a8e6bd;
             font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status::before {
-            content: "";
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #76d99a;
         }
 
         .preview-tag {
@@ -355,7 +342,7 @@
             font-size: 11px;
         }
 
-        /* SEKCE */
+        /* FUNKCE */
 
         section {
             padding: 100px 0;
@@ -385,7 +372,7 @@
             color: var(--muted);
             margin-top: 15px;
             font-size: 15px;
-            line-height: 1.7;
+            line-height: 1.8;
         }
 
         .features {
@@ -405,7 +392,6 @@
         .feature-card:hover {
             transform: translateY(-5px);
             border-color: rgba(152,112,255,.4);
-            background: #191526;
         }
 
         .feature-icon {
@@ -432,7 +418,7 @@
             line-height: 1.8;
         }
 
-        /* CTA */
+        /* STAŽENÍ */
 
         .download-section {
             padding-top: 40px;
@@ -448,28 +434,15 @@
             text-align: center;
         }
 
-        .download-card::before {
-            content: "";
-            position: absolute;
-            width: 400px;
-            height: 300px;
-            background: #8756ff;
-            filter: blur(120px);
-            opacity: .16;
-            top: -180px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .download-card h2 {
+        .download-card h2,
+        .download-card p {
             position: relative;
         }
 
         .download-card p {
-            position: relative;
             color: var(--muted);
             margin-top: 17px;
-            line-height: 1.7;
+            line-height: 1.8;
             font-size: 14px;
         }
 
@@ -485,7 +458,7 @@
             font-size: 13px;
         }
 
-        /* FOOTER */
+        /* PATIČKA */
 
         footer {
             border-top: 1px solid var(--border);
@@ -501,15 +474,23 @@
             flex-wrap: wrap;
         }
 
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .footer-brand img {
+            width: 27px;
+            height: 27px;
+            border-radius: 7px;
+        }
+
         .footer-copy {
             color: #766e85;
             font-size: 12px;
-        }
-
-        .footer-brand {
-            font-size: 14px;
-            font-weight: 800;
-            color: #c3b2ff;
         }
 
         /* ANIMACE */
@@ -539,13 +520,9 @@
                 display: none;
             }
 
-            .nav-button {
-                padding: 9px 12px;
-            }
-
             .hero {
                 min-height: auto;
-                padding: 90px 0 40px;
+                padding: 85px 0 45px;
             }
 
             h1 {
@@ -554,10 +531,6 @@
 
             .hero-description {
                 font-size: 15px;
-            }
-
-            .preview-wrapper {
-                margin-top: 55px;
             }
 
             .features {
@@ -582,17 +555,14 @@
                 display: none;
             }
 
-            .logo {
-                font-size: 20px;
-            }
-
-            .hero-actions {
+            .hero-actions,
+            .hero-actions a {
                 width: 100%;
             }
 
             .hero-actions a {
-                width: 100%;
                 justify-content: center;
+                text-align: center;
             }
 
             .download-card {
@@ -601,7 +571,9 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
+            *,
+            *::before,
+            *::after {
                 scroll-behavior: auto !important;
                 animation-duration: .01ms !important;
                 transition-duration: .01ms !important;
@@ -612,46 +584,50 @@
 
 <body>
 
-    <div class="background-glow"></div>
+    <div class="glow"></div>
 
     <header>
         <nav class="container">
+
             <a href="#" class="logo">
-                <span class="logo-icon">R</span>
-                <span>Revers<span>T</span></span>
+                <img src="/ikona5.ico" alt="Logo ReversT">
+                <span class="logo-name">Revers<span>T</span></span>
             </a>
 
             <div class="nav-links">
                 <a href="#">Domů</a>
                 <a href="#funkce">Funkce</a>
-                <a href="#stahnout" class="nav-button">Stáhnout</a>
+                <a href="#stahnout" class="nav-download">Stáhnout</a>
             </div>
+
         </nav>
     </header>
 
     <main>
 
         <div class="container">
+
             <section class="hero">
-                <div class="announcement fade-in">
-                    <span class="announcement-dot"></span>
+
+                <div class="tag fade-in">
+                    <span class="tag-dot"></span>
                     Chytřejší způsob psaní
                 </div>
 
                 <h1 class="fade-in">
                     Piš správně.<br>
-                    <span class="gradient-text">Bez námahy.</span>
+                    <span class="gradient">Bez námahy.</span>
                 </h1>
 
                 <p class="hero-description fade-in">
-                    Představujeme ReversT. Chytrou korekturu, která ti pomůže
-                    s gramatikou, pravopisem i smyslem textu.
-                    Protože na tom, co píšeš, záleží.
+                    Představujeme ReversT. Chytrou korekturu,
+                    která ti pomůže s gramatikou, pravopisem
+                    i smyslem textu. Protože na tom, co píšeš, záleží.
                 </p>
 
-                <div class="hero-actions fade-in">
+                <div class="actions fade-in">
                     <a href="#stahnout" class="button-primary">
-                        Stáhnout ReversT <span>→</span>
+                        Stáhnout ReversT →
                     </a>
 
                     <a href="#funkce" class="button-secondary">
@@ -664,59 +640,92 @@
                 </p>
 
                 <div class="preview-wrapper fade-in">
+
                     <div class="preview-glow"></div>
 
                     <div class="preview">
+
                         <div class="preview-top">
-                            <div class="preview-title">ReversT · Korektura</div>
-                            <div class="window-dots">
-                                <i></i><i></i><i></i>
+
+                            <div class="preview-title">
+                                <img src="/ikona5.ico" alt="">
+                                ReversT · Korektura
                             </div>
+
+                            <div class="window-dots">
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                            </div>
+
                         </div>
 
                         <div class="preview-content">
-                            <div class="preview-label">Ukázka korektury</div>
+
+                            <div class="preview-label">
+                                Ukázka korektury
+                            </div>
 
                             <div class="preview-text">
-                                <span class="wrong">Včera jsem šel do školy a zapomněl jsem si sešít.</span>
+                                <span class="wrong">
+                                    Včera jsem šel do školy a zapomněl jsem si sešít.
+                                </span>
+
                                 <br><br>
-                                <span class="correct">Včera jsem šel do školy a zapomněl jsem si sešit.</span>
+
+                                <span class="correct">
+                                    Včera jsem šel do školy a zapomněl jsem si sešit.
+                                </span>
                             </div>
 
                             <div class="preview-bottom">
                                 <div class="status">Návrh opravy</div>
                                 <div class="preview-tag">Chytrá korektura</div>
                             </div>
+
                         </div>
                     </div>
                 </div>
+
             </section>
+
         </div>
 
         <section id="funkce">
+
             <div class="container">
+
                 <div class="section-heading">
+
                     <div class="eyebrow">Co ReversT umí</div>
+
                     <h2>Více než obyčejná kontrola.</h2>
+
                     <p class="section-description">
-                        ReversT se zaměřuje na to, aby tvůj text nejen vypadal správně,<br>
-                        ale také dával smysl.
+                        ReversT se zaměřuje na to, aby tvůj text
+                        nejen vypadal správně, ale také dával smysl.
                     </p>
+
                 </div>
 
                 <div class="features">
+
                     <div class="feature-card">
                         <div class="feature-icon">✦</div>
+
                         <h3>Gramatika a pravopis</h3>
+
                         <p>
-                            Pomáhá odhalovat pravopisné a gramatické chyby
-                            a navrhuje jejich opravu.
+                            Pomáhá odhalovat pravopisné a gramatické
+                            chyby a navrhuje jejich opravu.
                         </p>
                     </div>
 
                     <div class="feature-card">
                         <div class="feature-icon">⌁</div>
+
                         <h3>Smysl textu</h3>
+
                         <p>
                             Nezaměřuje se pouze na jednotlivá slova.
                             Pomáhá také srozumitelnosti a významu vět.
@@ -725,43 +734,64 @@
 
                     <div class="feature-card">
                         <div class="feature-icon">◇</div>
+
                         <h3>Osobní slovník</h3>
+
                         <p>
                             Vlastní slovník a schválené opravy pomáhají
                             přizpůsobovat korekturu tvým potřebám.
                         </p>
                     </div>
+
                 </div>
+
             </div>
+
         </section>
 
         <section class="download-section" id="stahnout">
+
             <div class="container">
+
                 <div class="download-card">
+
                     <div class="eyebrow">ReversT pro Windows</div>
+
                     <h2>Připrav se psát lépe.</h2>
 
                     <p>
                         ReversT se připravuje na zveřejnění.<br>
-                        Instalační soubor zde bude dostupný, jakmile bude připraven.
+                        Instalační soubor zde bude dostupný,
+                        jakmile bude připraven.
                     </p>
 
                     <div class="download-status">
                         Instalační soubor připravujeme
                     </div>
+
                 </div>
+
             </div>
+
         </section>
 
     </main>
 
     <footer>
+
         <div class="container footer-content">
-            <div class="footer-brand">ReversT</div>
+
+            <div class="footer-brand">
+                <img src="/ikona5.ico" alt="">
+                ReversT
+            </div>
+
             <div class="footer-copy">
                 © <span id="year"></span> ReversT. Všechna práva vyhrazena.
             </div>
+
         </div>
+
     </footer>
 
     <script>
